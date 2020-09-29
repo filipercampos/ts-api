@@ -5,13 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "pwa-node",
             "request": "launch",
             "name": "Debug Dev",
             "skipFiles": [
                 "<node_internals>/**"
             ],
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
             "program": "${workspaceFolder}\\dist\\server.js",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register",
+                "-r",
+                "tsconfig-paths/register"
+            ],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ],
@@ -20,13 +31,24 @@
             }
         },
         {
-            "type": "node",
+            "type": "pwa-node",
             "request": "launch",
-            "name": "Debug Prd",
+            "name": "Debug Dev",
             "skipFiles": [
                 "<node_internals>/**"
             ],
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
             "program": "${workspaceFolder}\\dist\\server.js",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register",
+                "-r",
+                "tsconfig-paths/register"
+            ],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ],
