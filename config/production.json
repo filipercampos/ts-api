@@ -1,5 +1,5 @@
 {
-    "environment": "development",
+    "env": "development",
     "port": 3100,
     "db_connections": {
         "mongo": {
@@ -26,5 +26,8 @@
                 "token": "<token>"
             }
         }
+    },
+    "token_config": {
+        "expires_in": "12h"
     }
 }
