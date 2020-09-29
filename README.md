@@ -3,6 +3,20 @@ Usando typescript em uma API Rest com o padrão Clean Architeture <br/>
 
 Boas práticas de API Rest, middleware, autenticação com token jwt e padrões typescript <br/>
 
+# ts-node-dev
+```
+-r
+``` 
+executa um script antes
+```
+--transpile-only
+``` 
+ignora verificação do código está certo ou errado. Use ESLint
+```
+---respawn
+```  
+observar as alterações do código, para transpilar e fazer auto reload da aplicação. Despreza nodemon
+
 # Configuração de ambientes
 
 ## config
