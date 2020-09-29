@@ -26,16 +26,17 @@ export default Foo;<br/>
 import Foo from "./foo";
 
 # pm2 
-Use mode: fork
-pm2 start ecosystem.config.js -i 0
-Change environment
-pm2 start ecosystem.config.js --env dev
+Use mode: fork <br/>
+pm2 start ecosystem.config.js -i 0<br/>
+Change environment<br/>
+pm2 start ecosystem.config.js --env dev<br/>
 
 # About ECMAScript
-## ES6 / ES2015
-## ES2017 (ES8)
+### ES6 / ES2015
+### ES2017 (ES8)
+Current using es2017
 
-# res:Response
+# Response
 ## res.json 
 equals send status 200
 
