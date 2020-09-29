@@ -1,8 +1,7 @@
 import { IController } from '../core/icontroller';
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import UserModel from '../domain/models/user_model';
-// import UserModel from '@models/user_model';
+ import UserModel from '../models/user_model';
 
 export class UserController implements IController {
 

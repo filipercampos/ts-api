@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
+import { IPayloadTokenJwt, ITokenJwt } from 'interfaces/iconfigs';
 import { ConfigUtil } from '../../utils/config_util';
-import { IPayloadTokenJwt, ITokenJwt } from 'src/interfaces/iconfigs';
 const DOMAIN = 'API_REST';
 
 export class Auth {

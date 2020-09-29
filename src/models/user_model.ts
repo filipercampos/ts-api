@@ -1,5 +1,5 @@
-import { BuilderModel } from '../../helpers/builder_model';
-import { IModel } from '../../core/imodel';
+import { BuilderModel } from '../helpers/builder_model';
+import { IModel } from '../core/imodel';
 
 export interface IUser extends IModel {
     firstName: string,
