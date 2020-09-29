@@ -15,6 +15,5 @@ const config = cfg.getServerConfig();
 // create server https
 https.createServer(httpsOptions, app).listen(config.port, () => {
     console.log(`APP listening on Environment: ${config.env} | Port: ${config.port}`);
-
 });
 

@@ -1,70 +1,12 @@
 import config from 'config';
-import { Algorithm } from 'jsonwebtoken';
-
-export interface IServerConfig {
-
-    env: string,
-    port: number,
-    db_connections: IConnectionConfig[],
-    apis: IApiConfig[]
-}
-
-export interface IConnectionConfig {
-
-    name: string,
-    host: string,
-    database: string,
-    user: string,
-    password: string,
-    port: number
-}
-
-export interface IApiConfig {
-
-    name: string,
-    url: string,
-    headers: {
-        token: string,
-    }
-}
-
-export interface ITokenConfig {
-    expires_in: string
-}
-
-export interface ITokenJwt {
-    header: Algorithm,
-    payload: IPayloadTokenJwt,
-    signature: string
-}
-
-export interface IPayloadTokenJwt {
-    domain: string,
-    payload: any,
-    iat: number,
-    exp: number,
-}
-
+import { IServerConfig, IConnectionConfig, IApiConfig, ITokenConfig } from '../interfaces/iconfigs';
+import fs from 'fs';
+import path from 'path';
 export class ConfigUtil {
 
     private static instance: ConfigUtil;
-    private readonly nodeConfigDir: string;
-    private readonly DEVELOPMENT = 'development';
-    private readonly PRODUCTION = 'production';
-
 
     private constructor() {
-        this.nodeConfigDir = process.env["NODE_CONFIG_DIR"] as string;
-    }
-
-
-    public getNodeEnvironment(): string {
-
-        if (config.has('env')) {
-            return config.get<string>('env')
-        }
-        const env = process.env["NODE_ENV"] || 'development';
-        return env;
     }
 
     /**
@@ -76,6 +18,18 @@ export class ConfigUtil {
             ConfigUtil.instance = new ConfigUtil();
         }
         return ConfigUtil.instance;
+    }
+
+    /**
+     * Ambiente Node
+     */
+    public getNodeEnvironment(): string {
+
+        if (config.has('env')) {
+            return config.get<string>('env')
+        }
+        const env = process.env["NODE_ENV"] || 'development';
+        return env;
     }
 
     /**
@@ -139,7 +93,6 @@ export class ConfigUtil {
         return mongoUrl;
     }
 
-
     /**
      * Recupera configuração do token
      * 
@@ -154,6 +107,14 @@ export class ConfigUtil {
         }
         let configuration = config.get<ITokenConfig>(key);
         return configuration;
+    }
+
+    /**
+     * Chave JWT
+     */
+    public getSecret() {
+        const secret = fs.readFileSync(path.join(__dirname, '../../config', 'secret.cert'), 'utf-8');
+        return secret as string;
     }
 
     /**

@@ -1,26 +1,30 @@
 import * as jwt from 'jsonwebtoken';
-import { ConfigUtil, IPayloadTokenJwt, ITokenJwt } from '../../utils/config_util';
-import fs from 'fs';
-import path from 'path';
+import { ConfigUtil } from '../../utils/config_util';
+import { IPayloadTokenJwt, ITokenJwt } from 'src/interfaces/iconfigs';
 const DOMAIN = 'API_REST';
-const secretOrPrivateKey = fs.readFileSync(path.join(__dirname, '../../../config', 'secret.cert'), 'utf-8');
 
 export class Auth {
-    constructor() { }
+
+    private readonly secretOrPrivateKey: string;
+
+    constructor() {
+        this.secretOrPrivateKey = ConfigUtil.getInstance().getSecret();
+    }
 
     /**
      * Gera um token JWT
      * @param data json
      * @param expiration expiraçao do token (default 12h)
      */
-    public encodeJwt(data: any, expiration: string = '12h'): string {
+    public encodeJwt(data: any, expiration: string = '12h', domain: string = DOMAIN): string {
 
         const payload = {
-            domain: DOMAIN,
+            domain: domain,
             payload: data
         };
+
         const tokenConfig = ConfigUtil.getInstance().getTokenConfig();
-        return jwt.sign(payload, secretOrPrivateKey, {
+        return jwt.sign(payload, this.secretOrPrivateKey, {
             expiresIn: expiration || tokenConfig.expires_in
         });
 
@@ -33,10 +37,8 @@ export class Auth {
      * @returns {ITokenJwt}
      */
     public verifyJwt(token: string): IPayloadTokenJwt {
-
-        const validation = jwt.verify(token, secretOrPrivateKey);
+        const validation = jwt.verify(token, this.secretOrPrivateKey);
         return validation as IPayloadTokenJwt;
-
     }
 
     /**
@@ -44,11 +46,9 @@ export class Auth {
      * @param token {string}
      */
     public decodeJwt(token: string): ITokenJwt {
-
         let decodedJson = jwt.decode(token, { complete: true });
         const decoded = decodedJson as ITokenJwt;
         return decoded;
-
     }
 
 }

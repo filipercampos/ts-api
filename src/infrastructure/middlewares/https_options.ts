@@ -7,9 +7,8 @@ import path from 'path';
  */
 function getHttpsOptions(): { key: Buffer, cert: Buffer } {
 
-    const key = path.join(__dirname, '../../../config', 'key.pem');
-    const cert = path.join(__dirname, '../../../config', 'cert.pem');
-
+    const key = path.join(__dirname, '../../../certificates', 'key.pem');
+    const cert = path.join(__dirname, '../../../certificates', 'cert.pem');
     const httpsOptions = {
         key: fs.readFileSync(key),
         cert: fs.readFileSync(cert)

@@ -1,4 +1,18 @@
-# tfs-api
+# ts-api
+Usando typescript em uma API Rest com o padrão Clean Architeture <br/>
+
+Boas práticas de API Rest, middleware, autenticação com token jwt e padrões typescript <br/>
+
+# Configuração de ambientes
+
+## config
+Mais complexo, com mais dependencias e atualizações mais frequentes. Recomendado para gerenciar várias conexões
+
+## dotenv
+Mais utilizado por toda comunidade pela facilidade de uso, maior número de desenvolvedores, além de posuir menos dependencias
+
+[Diff](https://npmcompare.com/compare/config,dotenv,nconf)
+
 # Middleware
 O middleware é o software que se encontra entre o sistema operacional e os aplicativos nele executados. Funcionando de forma essencial como uma camada oculta de tradução, o middleware permite a comunicação e o gerenciamento de dados para aplicativos distribuídos.
 [Read-me](https://expressjs.com/pt-br/guide/using-middleware.html)
