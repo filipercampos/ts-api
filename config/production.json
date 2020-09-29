@@ -1,6 +1,6 @@
 {
-    "env": "development",
-    "port": 3100,
+    "env": "production",
+    "port": 3101,
     "db_connections": {
         "mongo": {
             "name": "MongoDB",
