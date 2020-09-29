@@ -1,0 +1,30 @@
+{
+    "environment": "development",
+    "port": 3100,
+    "db_connections": {
+        "mongo": {
+            "name": "MongoDB",
+            "host": "localhost",
+            "database": "mongo",
+            "user": null,
+            "password": null,
+            "port": 27017
+        },
+        "mssql": {
+            "name": "SQL Server",
+            "host": "192.168.50.140",
+            "user": "loca",
+            "password": "loca321",
+            "database": "QAS",
+            "port": 1433
+        }
+    },
+    "apis": {
+        "tfs": {
+            "url": "https://url",
+            "headers": {
+                "token": "<token>"
+            }
+        }
+    }
+}
