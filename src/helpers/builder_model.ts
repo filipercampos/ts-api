@@ -3,6 +3,10 @@ import { IModel } from '../core/imodel';
 
 const Schema = mongoose.Schema;
 
+///Alto acomplamento
+/**
+ * Obsoleto
+ */
 class BaseModel {
 
     protected modelName: string;

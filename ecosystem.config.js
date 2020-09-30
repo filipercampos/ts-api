@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "tfs-api",
+      name: "ts-api",
       script: 'dist/server.js',
       max_memory_restart: '300M',
       watch: true,
@@ -10,7 +10,7 @@ module.exports = {
       },
       env_dev: {
         "NODE_ENV": "development"
-      } 
+      }
     },
   ]
 };

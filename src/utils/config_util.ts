@@ -40,7 +40,7 @@ export class ConfigUtil {
         const env = this.getNodeEnvironment();
         const port = this.validateConfig('port');
 
-        const server = { env: env, port: port }
+        const server = { env: env, port: port || 3100 }
 
         return server as IServerConfig;
     }

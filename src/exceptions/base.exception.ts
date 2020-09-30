@@ -4,30 +4,32 @@ import { Exception } from './exception';
 
 export abstract class BaseException extends Exception {
 
-    public readonly status: Number;
+    public readonly status: number;
+    public readonly statusText: string;
 
-    constructor(error: any, statusCode: Number) {
+    constructor(error: any, statusCode: HttpStatusCode) {
 
-        let code = EnumUtils.checkEnum(HttpStatusCode, statusCode);
+        let code = EnumUtils.getEnum(HttpStatusCode, statusCode) as number;
 
         if (code == null) {
-            throw new Exception('HttpStatusCode ' + statusCode + ' inválido');
+            throw new Exception('base.exception:HttpStatusCode ' + statusCode + ' inválido');
         }
 
-        let msg = error;
+        let errorMsg = null;
         if (typeof error === 'string') {
-            msg = error;
+            errorMsg = error;
         }
         else if (error.isAxiosError && error.response) {
-            msg = error.message + `\n ${typeof error.response.data === 'object'
+            errorMsg = error.message + `\n ${typeof error.response.data === 'object'
                 ? JSON.stringify(error.response.data)
                 : error.response.data}`;
         } else {
-            msg = typeof error === 'object'
+            errorMsg = typeof error === 'object'
                 ? JSON.stringify(error)
                 : error;
         }
-        super(msg);
+        super(errorMsg);
         this.status = code;
+        this.statusText = statusCode.toString();
     }
 }

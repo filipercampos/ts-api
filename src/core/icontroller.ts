@@ -3,8 +3,6 @@ export interface IController {
 
     getById(req: Request, res: Response): any;
 
-    getFirst(req: Request, res: Response): any;
-
     getAll(req: Request, res: Response): any;
 
     where(req: Request, res: Response): any;

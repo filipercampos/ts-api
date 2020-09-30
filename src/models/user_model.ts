@@ -1,26 +1,33 @@
-import { BuilderModel } from '../helpers/builder_model';
-import { IModel } from '../core/imodel';
+import { IPagination } from "core/ipagination";
+import * as mongoose from "mongoose";
 
-export interface IUser extends IModel {
+export interface IUser extends mongoose.Document {
     firstName: string,
     lastName: string,
     email: string,
+    password: string | undefined,
     company: string
     phone: Number,
     created_date: Date,
 }
 
-const definitionSchema = {
+const UserSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: 'Enter a first name'
+        required: true
     },
     lastName: {
         type: String,
-        required: 'Enter a last name'
+        required: true
     },
     email: {
-        type: String
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true,
+        select: false
     },
     company: {
         type: String
@@ -32,9 +39,8 @@ const definitionSchema = {
         type: Date,
         default: Date.now
     }
-};
+});
 
-const model = BuilderModel.getInstance().builder<IUser>('Usuario', definitionSchema);
+const UserModel = mongoose.model<IUser>('Usuario', UserSchema);
 
-// Export the model and return your IUser interface
-export default model;
+export default UserModel;

@@ -1,45 +1,37 @@
 import express from 'express';
 import routes from './routes';
-import mongoose from 'mongoose';
 import { Middleware } from './infrastructure/middlewares/middleware';
 import { ConfigUtil } from './utils/config_util';
+import { MongoDb } from './infrastructure/database/mongo_db';
 
 class App {
 
+    //express
     public app: express.Application = express();
-    public readonly middleware: Middleware = new Middleware();
+    private mongo:MongoDb = new MongoDb();
 
     constructor() {
         this.initialize();
-        this.mongoSetup();
-    }
-
-    private mongoSetup(): void {
-        const cfg = ConfigUtil.getInstance();
-        // 'mongodb://host/database';
-        const mongoUrl = cfg.getConnectionStringMongoDb('mongo');
-        const options = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }
-        mongoose.Promise = global.Promise;
-        mongoose.connect(mongoUrl, options);
     }
 
     private initialize(): void {
 
-        //config middleware
-        this.middleware.middleware(this.app);
+        //database config
+        this.mongo.mongoSetup();
 
+        //middlewares
+        const middleware: Middleware = new Middleware();
+        //seta as configurações de middlware
+        middleware.middleware(this.app);
         //config routes
         this.app.use(routes);
-        // this.overriddeNodeConfigDir();
+        //server config
+        const cfg = ConfigUtil.getInstance().getServerConfig();
+        //set port
+        this.app.set("port", cfg.port);
+        //set env
+        this.app.set("env", cfg.env);
     }
-
-    public overriddeNodeConfigDir(): void {
-        process.env["NODE_CONFIG_DIR"] = __dirname + "/infrastructure/config/";
-    }
-
 
 }
 

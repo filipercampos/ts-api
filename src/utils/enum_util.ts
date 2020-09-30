@@ -12,7 +12,7 @@
  *  EnumUtils.getEnumValues(StringValueEnum, EnumType.String);
  */
 
- export class EnumUtils {
+export class EnumUtils {
   /**
    * Returns the enum keys
    * @param enumObj enum object
@@ -24,15 +24,19 @@
 
   /**
    * Check enum value
-   * @param enumObj enum object
-   * @param enumValue enum value
+   * @param enumsObj enum object
+   * @param enumObj enum value
+   * @returns enum value or key default is value
    */
-  static checkEnum(enumObj: any, enumValue: any) : any {
+  static getEnum(enumsObj: any, enumObj: any, key: boolean = false): any {
 
-    let value = enumObj[enumValue];
-    
-    if (value) {
-      return value;
+    let obj = enumsObj[enumObj];
+  
+    if (obj) {
+      if (key) {
+        return obj;
+      }
+      return enumObj;
     }
     return null;
   }

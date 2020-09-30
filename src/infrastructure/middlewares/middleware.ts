@@ -4,17 +4,18 @@ import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import checkJwt from './check_jwt';
 
+
 export class Middleware {
 
     /**
-     * Todas as rotas usaram uma chave
+     * Configraçãoes de middleware da aplicação
      * @param app 
      */
     public middleware(app: express.Application): void {
 
         // a middleware function level app
         //This code is executed for every request to the router       
-        app.use(checkJwt);
+        // app.use(checkJwt);
          
         // app.use(function (req: Request, res: Response, next: NextFunction) {
         //     const now = new Date();

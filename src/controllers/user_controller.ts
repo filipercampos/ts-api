@@ -1,79 +1,85 @@
 import { IController } from '../core/icontroller';
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
- import UserModel from '../models/user_model';
+import UserModel, { IUser } from '@models/user_model';
+import { BaseController } from 'core/base_controller';
 
-export class UserController implements IController {
+export class UserController extends BaseController implements IController {
 
-    public getById(req: Request, res: Response) {
-
-        UserModel.findById(req.params.id, (err, user) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
+    constructor() {
+        super();
     }
 
-    public getFirst(req: Request, res: Response) {
-        UserModel.findOne({}, (err, user) => {
-            if (err) {
-                res.send(err);
-            }
-            res.status(204).send(user);
-        });
+    public async getById(req: Request, res: Response) {
+
+        try {
+            const user = await UserModel.findById(req.params.id);
+            super.sendSuccess(res, user);
+        } catch (error) {
+            super.sendError(res, error.message);
+        }
     }
 
-    public getAll(req: Request, res: Response) {
+    public async getAll(req: Request, res: Response) {
 
-        UserModel.find({}, (err, user) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
+        try {
+            const pagination = super.isPagination(req);
+
+            const result = await UserModel.find()
+                .skip(pagination.offset)
+                .limit(pagination.limit);
+
+            super.pagination(result);
+            super.sendSuccess(res, result);
+
+        } catch (error) {
+            super.sendError(res, error);
+        }
     }
 
-    public post(req: Request, res: Response) {
-        let newUser = new UserModel(req.body);
+    public async post(req: Request, res: Response) {
 
-        newUser.save((err, user: mongoose.Document) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
+        try {
+            let newUser = new UserModel(req.body);
+            const save = await newUser.save();
+            console.log(save);
+            super.sendCreated(res, save);
+        } catch (error) {
+            super.sendError(res, error);
+        }
     }
 
-    public put(req: Request, res: Response) {
-        UserModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, user: any) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
+    public async put(req: Request, res: Response) {
+
+        try {
+            const users = await UserModel.findOneAndUpdate({ _id: req.params.id }, req.body);
+            super.sendSuccess(res, users);
+        } catch (error) {
+            super.sendError(res, error);
+        }
     }
 
-    public patch(req: Request, res: Response) {
-        UserModel.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, user) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(user);
-        });
+    public async patch(req: Request, res: Response) {
+        try {
+            //TODO alterar senha
+            const users = await UserModel.findOneAndUpdate({ _id: req.params.id }, req.body);
+            super.sendSuccess(res, users);
+        } catch (error) {
+            super.sendError(res, error);
+        }
     }
 
-    public delete(req: Request, res: Response) {
-        UserModel.remove({ _id: req.params.id }, (err) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json({ message: 'Successfully deleted user!' });
-        });
+    public async delete(req: Request, res: Response) {
+
+        try {
+            //TODO alterar senha
+            const users = await UserModel.deleteOne({ _id: req.params.id });
+            super.sendSuccess(res, users);
+        } catch (error) {
+            super.sendError(res, error);
+        }
     }
 
     public where(req: Request, res: Response) {
-
-
+        //TODO
     }
 }

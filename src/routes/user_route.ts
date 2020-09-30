@@ -10,6 +10,7 @@ export class UserRoute extends BaseRoute {
     }
 
     public routes(router: Router): void {
+        
         // User 
         router.route('/usuarios')
             .get(this.controller.getAll)
@@ -22,6 +23,5 @@ export class UserRoute extends BaseRoute {
             .get(this.controller.getById)
             .put(this.controller.put)
             .delete(this.controller.delete);
-
     }
 }

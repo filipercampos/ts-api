@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UserRoute } from './routes/user_route';
-import { LoginRoute } from './routes/login_route';
+import { AuthRoute } from './routes/auth_route';
 
 const routes = Router();
 
@@ -13,7 +13,7 @@ routes.route('/')
         `);
     })
 
-new LoginRoute().routes(routes);
+new AuthRoute().routes(routes);
 
 new UserRoute().routes(routes);
 

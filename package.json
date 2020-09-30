@@ -26,6 +26,8 @@
   "homepage": "https://github.com/filipercampos/tfs-api#readme",
   "repository": "git+https://github.com/filipercampos/tfs-api.git",
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "config": "^3.3.1",
     "cors": "^2.8.5",

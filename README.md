@@ -1,5 +1,5 @@
 # ts-api
-Usando typescript em uma API Rest com o padrão Clean Architeture <br/>
+Usando typescript em uma API Rest com o padrão Clean Architeture<br/>
 
 Boas práticas de API Rest, middleware, autenticação com token jwt e padrões typescript <br/>
 
@@ -74,3 +74,6 @@ We can use res.end() if we want to end the response without providing any data. 
 ```
 res.status(404).end();
 ```
+
+
+### tips @ts-api

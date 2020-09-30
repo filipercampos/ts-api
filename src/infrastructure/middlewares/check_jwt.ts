@@ -1,26 +1,31 @@
-import { Request, Response, Router, NextFunction } from 'express';
 import { Auth } from '../security/auth';
+import { HttpStatusCode } from 'consts/httpStatusCode';
+import { Request, Response, NextFunction } from 'express';
+import allowRoutes, { IRouteExpress } from './allowRoutes';
 
 function checkJwt(req: Request, res: Response, next: NextFunction) {
 
-    const method = req.method;
-    const originalUrl = req.originalUrl;
+    const r = {
+        type: req.method,
+        route: req.originalUrl
+    } as IRouteExpress;
 
-    if (method === 'POST' && originalUrl === '/login') {
+    const allow = allowRoutes.find(route => route.type == r.type && route.route == r.route);
+    if (allow || allowRoutes.length == 0) {
         //allow route
         const now = new Date();
-        console.log(`Route Interceptor at: ${now.toISOString()}  ${originalUrl}`);
-        console.log(`Request from: ${req.originalUrl} | type: ${req.method}`);
+        console.log(`Interceptor at: ${now.toISOString()} | route: ${r.route} | type: ${r.type}`);
         next();
     } else {
 
         let token = req.headers.authorization;
         if (!token) {
-            return res.status(401).json({
-                data: {
-                    message: 'Token jwt is required'
-                }
-            });
+            return res.status(HttpStatusCode.UNAUTHORIZED)
+                .json({
+                    data: {
+                        message: 'Token jwt is required'
+                    }
+                });
         }
 
         try {
@@ -28,7 +33,8 @@ function checkJwt(req: Request, res: Response, next: NextFunction) {
             new Auth().verifyJwt(token);
             next();
         } catch (error) {
-            return res.status(400).json({ data: { message: 'Token JWT invalid/expire' } });
+            return res.status(HttpStatusCode.UNAUTHORIZED)
+                .json({ data: { message: 'Token JWT invalid/expire' } });
         }
     }
 }
