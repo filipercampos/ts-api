@@ -2,6 +2,8 @@ import config from 'config';
 import { IServerConfig, IConnectionConfig, IApiConfig, ITokenConfig } from '../interfaces/iconfigs';
 import fs from 'fs';
 import path from 'path';
+
+//Singleton
 export class ConfigUtil {
 
     private static instance: ConfigUtil;

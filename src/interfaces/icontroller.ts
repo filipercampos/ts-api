@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
 export interface IController {
 
-    getById(req: Request, res: Response): any;
+    findById(req: Request, res: Response): any;
 
-    getAll(req: Request, res: Response): any;
-
-    where(req: Request, res: Response): any;
+    find(req: Request, res: Response): any;
 
     post(req: Request, res: Response): any;
 

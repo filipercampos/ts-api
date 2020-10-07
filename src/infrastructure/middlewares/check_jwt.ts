@@ -10,11 +10,12 @@ function checkJwt(req: Request, res: Response, next: NextFunction) {
         route: req.originalUrl
     } as IRouteExpress;
 
+    //check routes 
     const allow = allowRoutes.find(route => route.type == r.type && route.route == r.route);
-    if (allow || allowRoutes.length == 0) {
-        //allow route
-        const now = new Date();
-        console.log(`Interceptor at: ${now.toISOString()} | route: ${r.route} | type: ${r.type}`);
+    // route allow
+    if (allowRoutes.length == 0 || allow) {
+        // const now = new Date();
+        // console.log(`Interceptor at: ${now.toISOString()} | route: ${r.route} | type: ${r.type}`);
         next();
     } else {
 

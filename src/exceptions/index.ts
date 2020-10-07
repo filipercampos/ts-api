@@ -1,19 +1,19 @@
-// import { ForbiddenException } from './forbidden.exception';
-// import { BadRequestException } from './badRequest.exception';
-// import { UnauthorizedException } from './unauthorized.exception';
-// import { UnprocessableEntityException } from './unprocessableEntity.exception';
-// import { MultipleChoicesException } from './multipleChoices.exception';
-// import { NotContenException } from './notContent.exception';
-// import { NotFoundException } from './notFound.exception';
-// import { InternalErrorException } from './internalError.exception';
+import { ForbiddenException } from './forbidden_exception';
+import { BadRequestException } from './badRequest_exception';
+import { UnauthorizedException } from './unauthorized_exception';
+import { UnprocessableEntityException } from './unprocessableEntity_exception';
+import { MultipleChoicesException } from './multipleChoices_exception';
+import { NotContenException } from './notContent_exception';
+import { NotFoundException } from './notFound_exception';
+import { InternalErrorException } from './internalError_exception';
 
-// export default {
-//     ForbiddenException,
-//     BadRequestException,
-//     UnauthorizedException,
-//     UnprocessableEntityException,
-//     MultipleChoicesException,
-//     NotContenException,
-//     NotFoundException,
-//     InternalErrorException
-// }
+export default {
+    ForbiddenException,
+    BadRequestException,
+    UnauthorizedException,
+    UnprocessableEntityException,
+    MultipleChoicesException,
+    NotContenException,
+    NotFoundException,
+    InternalErrorException
+}

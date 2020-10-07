@@ -1,22 +1,17 @@
-import { IPagination } from "core/ipagination";
+import { AppConsts } from "consts/app_consts";
 import * as mongoose from "mongoose";
+import { BcryptUtil } from "utils/bcrypt_util";
 
 export interface IUser extends mongoose.Document {
-    firstName: string,
-    lastName: string,
+    name: string,
     email: string,
+    phone: string | null,
     password: string | undefined,
-    company: string
-    phone: Number,
     created_date: Date,
 }
 
 const UserSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
+    name: {
         type: String,
         required: true
     },
@@ -24,16 +19,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String
+    },
     password: {
         type: String,
         required: true,
         select: false
-    },
-    company: {
-        type: String
-    },
-    phone: {
-        type: Number
     },
     created_date: {
         type: Date,
@@ -41,6 +33,24 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-const UserModel = mongoose.model<IUser>('Usuario', UserSchema);
+//encrypted password before save
+UserSchema.pre<IUser>('validate', async function (next) {
+
+    console.log('validate');
+    const self = this;
+    let result = await UserModel.findOne({ email: this.email });
+    if (result != null) {
+        self.invalidate("email", "Email already exists");
+        next(new Error("Email already exists"));
+    } else {
+        const pw = self.password?.toString() as string;
+        const hash = BcryptUtil.hash(pw);
+        self.password = hash;
+        next();
+    }
+
+});
+
+const UserModel = mongoose.model<IUser>(AppConsts.USERS_COLLECTION, UserSchema);
 
 export default UserModel;

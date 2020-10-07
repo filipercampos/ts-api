@@ -1,35 +1,28 @@
+import { BadRequestException } from '@exceptions/badRequest_exception';
+import { UnauthorizedException } from '@exceptions/unauthorized_exception';
+import { UsuarioRepository } from 'domain/repositories/usuario_repository';
 import { Request, Response } from 'express';
-import { BaseController } from '../core/base_controller';
-import UserModel from '@models/user_model';
-import { HttpStatusCode } from 'consts/httpStatusCode';
-import { BcryptUtil } from 'utils/bcrypt_util';
-
+import { BaseController } from "../core/base_controller";
 export class AuthController extends BaseController {
 
     constructor() {
-        super();
+        super(new UsuarioRepository());
     }
 
-    public async postAuth(req: Request, res: Response) {
+    public async post(req: Request, res: Response) {
         try {
-            const { email, password } = req.body;
-            let user = await UserModel.findOne({ email }).select('+password');
-            if (user != null) {
-                const compare = BcryptUtil.compare(password, user.password as string);
-                if (compare) {
-                    //cancel password
-                    user.password = undefined;
-                    return super.send(res, HttpStatusCode.ACCEPTED, user);
-                } else {
-                    return super.sendUnauthorized(res, 'Senha inválida');
-                }
-            } else {
-                super.sendBadRequest(res, 'Email inválido');
-            }
 
+            //desestruturação
+            const { email, password } = req.body;
+
+            if (!email || !password) {
+                throw new BadRequestException('Email ou senha inválidos');
+            }
+            let rep = this.baseRepository as UsuarioRepository;
+            let user = await rep.authenticate(req.body);
+            super.sendSuccess(res, user);
         } catch (error) {
-            super.sendBadRequest(res, 'Email ou senha inválido');
+            super.sendError(res, error);
         }
     }
-
 }

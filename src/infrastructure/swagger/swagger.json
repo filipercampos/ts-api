@@ -1,0 +1,225 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "TS-API typescript",
+        "description": "Using typeScript by mongo",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "Local"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Userss",
+            "description": "API for users in the system"
+        }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "Userss"
+                ],
+                "summary": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Userss"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Userss"
+                ],
+                "summary": "Create a new user in system",
+                "requestBody": {
+                    "description": "Users Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Users"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user that we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Userss"
+                ],
+                "summary": "Get user by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Users by id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Users not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update user by ID",
+                "tags": [
+                    "Userss"
+                ],
+                "requestBody": {
+                    "description": "Users Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Users"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Users by new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Users not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete user by ID",
+                "tags": [
+                    "Userss"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Delete Users by id",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Users not found."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "id": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "Users": {
+            "type": "object",
+            "properties": {
+                "genus": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "isHungry": {
+                    "type": "boolean"
+                },
+                "lastFedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "Userss": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Users"
+                    }
+                }
+            }
+        }
+    }
+}

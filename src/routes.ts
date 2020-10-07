@@ -1,20 +1,8 @@
 import { Router } from 'express';
-import { UserRoute } from './routes/user_route';
-import { AuthRoute } from './routes/auth_route';
+const router = Router();
 
-const routes = Router();
+import routes from './routes/index';
 
-//index
-routes.route('/')
-    .get((req, res) => {
-        res.send(`
-        <h1>Welcome to express</h1>
-        <p> This API using Typescript</p>
-        `);
-    })
+routes.forEach((r) => r.routes(router));
 
-new AuthRoute().routes(routes);
-
-new UserRoute().routes(routes);
-
-export default routes;
+export default router;

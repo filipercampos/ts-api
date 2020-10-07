@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { IController } from './icontroller';
+import { BaseController } from './base_controller';
 
 export abstract class BaseRoute {
 
-    public controller: IController;
+    public controller: BaseController;
 
-    constructor(controller: IController) {
+    constructor(controller: BaseController) {
         this.controller = controller;
     }
 

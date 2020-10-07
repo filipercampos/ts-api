@@ -4,8 +4,8 @@ export interface IRouteExpress {
 }
 const allowRoutes: IRouteExpress[] = [];
 
-// allowRoutes.push({ type: 'GET', route: '/' });
-// allowRoutes.push({ type: 'GET', route: '/usuarios' });
-// allowRoutes.push({ type: 'POST', route: '/authenticate' });
+// allowRoutes.push({ type: 'POST', route: '/api/authenticate' });
+// allowRoutes.push({ type: 'GET', route: '/users' });
+// allowRoutes.push({ type: 'GET', route: '/tasks' });
 
 export default allowRoutes; 

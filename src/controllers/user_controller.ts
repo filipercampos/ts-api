@@ -1,85 +1,48 @@
-import { IController } from '../core/icontroller';
-import { Request, Response } from 'express';
-import UserModel, { IUser } from '@models/user_model';
+import { BadRequestException } from '@exceptions/badRequest_exception';
+import { IUser } from '@models/user_model';
 import { BaseController } from 'core/base_controller';
+import { UsuarioRepository } from 'domain/repositories/usuario_repository';
+import { Request, Response } from 'express';
 
-export class UserController extends BaseController implements IController {
+export class UserController extends BaseController {
 
     constructor() {
-        super();
-    }
-
-    public async getById(req: Request, res: Response) {
-
-        try {
-            const user = await UserModel.findById(req.params.id);
-            super.sendSuccess(res, user);
-        } catch (error) {
-            super.sendError(res, error.message);
-        }
-    }
-
-    public async getAll(req: Request, res: Response) {
-
-        try {
-            const pagination = super.isPagination(req);
-
-            const result = await UserModel.find()
-                .skip(pagination.offset)
-                .limit(pagination.limit);
-
-            super.pagination(result);
-            super.sendSuccess(res, result);
-
-        } catch (error) {
-            super.sendError(res, error);
-        }
-    }
-
-    public async post(req: Request, res: Response) {
-
-        try {
-            let newUser = new UserModel(req.body);
-            const save = await newUser.save();
-            console.log(save);
-            super.sendCreated(res, save);
-        } catch (error) {
-            super.sendError(res, error);
-        }
+        super(new UsuarioRepository());
     }
 
     public async put(req: Request, res: Response) {
-
         try {
-            const users = await UserModel.findOneAndUpdate({ _id: req.params.id }, req.body);
-            super.sendSuccess(res, users);
+
+            const user: any = {
+                name: req.body.name,
+                phone: req.body.phone
+            } as IUser;
+
+            if (!this.reqHelper.isValid(user.name) || !this.reqHelper.isValid((user.phone))) {
+                super.sendError(res, new BadRequestException('Name or phone invalid'));
+            }
+            else {
+                const result = await this.baseRepository.put(req.params.id, user);
+                super.sendUpdated(res, result);
+            }
         } catch (error) {
             super.sendError(res, error);
         }
     }
 
-    public async patch(req: Request, res: Response) {
+    public async find(req: Request, res: Response) {
         try {
-            //TODO alterar senha
-            const users = await UserModel.findOneAndUpdate({ _id: req.params.id }, req.body);
-            super.sendSuccess(res, users);
+            const pagination = await super.getPagination(req);
+            
+            this.reqHelper.pushParam('name', req.query.name);
+            this.reqHelper.pushParam('email', req.query.email);
+            const params = this.reqHelper.toJsonLike();
+            const result = await this.baseRepository.find(params, pagination);
+
+            super.sendSuccess(res, result, pagination);
+
         } catch (error) {
             super.sendError(res, error);
         }
-    }
-
-    public async delete(req: Request, res: Response) {
-
-        try {
-            //TODO alterar senha
-            const users = await UserModel.deleteOne({ _id: req.params.id });
-            super.sendSuccess(res, users);
-        } catch (error) {
-            super.sendError(res, error);
-        }
-    }
-
-    public where(req: Request, res: Response) {
-        //TODO
     }
 }

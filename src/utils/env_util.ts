@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import { IServerConfig, IConnectionConfig } from '../interfaces/iconfigs';
 
+//Singleton
 export class EnvUtil {
 
   private static instance: EnvUtil;

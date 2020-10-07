@@ -19,11 +19,10 @@ export abstract class BaseException extends Exception {
         if (typeof error === 'string') {
             errorMsg = error;
         }
-        else if (error.isAxiosError && error.response) {
-            errorMsg = error.message + `\n ${typeof error.response.data === 'object'
-                ? JSON.stringify(error.response.data)
-                : error.response.data}`;
-        } else {
+        else if (error.message ) {
+            errorMsg = error.message;
+        }
+        else {
             errorMsg = typeof error === 'object'
                 ? JSON.stringify(error)
                 : error;

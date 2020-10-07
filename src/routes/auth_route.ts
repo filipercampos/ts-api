@@ -1,12 +1,16 @@
 import { Router } from "express";
 import { AuthController } from '@controllers/auth_controller';
+import { BaseRoute } from "core/base_route";
 
-export class AuthRoute {
+export class AuthRoute extends BaseRoute {
 
-    public authController: AuthController = new AuthController();
+    constructor() {
+        super(new AuthController());
+    }
 
     public routes(router: Router): void {
+
         // auth
-        router.route('/authenticate').post(this.authController.postAuth);
+        router.route('/authenticate').post((req, res) => this.controller.post(req, res));
     }
 }

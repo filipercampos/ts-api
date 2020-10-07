@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import checkJwt from './check_jwt';
-
+import checkJwt from './check_jwt'; 
 
 export class Middleware {
 
@@ -15,13 +14,7 @@ export class Middleware {
 
         // a middleware function level app
         //This code is executed for every request to the router       
-        // app.use(checkJwt);
-         
-        // app.use(function (req: Request, res: Response, next: NextFunction) {
-        //     const now = new Date();
-        //     console.warn('Route Interceptor => At: ' + now.toISOString());
-        //     next();
-        // });
+        app.use(checkJwt);
 
         // support application/json type post data
         app.use(bodyParser.json());
@@ -37,6 +30,7 @@ export class Middleware {
 
         //any type
         app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+
     }
 
 } 
