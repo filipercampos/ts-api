@@ -9,6 +9,7 @@ export class UserRepository extends BaseRepository<IUser>{
 
     constructor() {
         super(UserModel);
+        //enable eager load
         this.populateArray.push('tasks');
     }
 
@@ -18,7 +19,8 @@ export class UserRepository extends BaseRepository<IUser>{
         const { email, password } = item;
 
         try {
-            let user = await this.model.findOne({ email }).select('+password');
+            let user = await this.model.findOne({ email })
+                                       .select('+password');
             if (user != null) {
                 if (user.password == password) {
                     //cancel password

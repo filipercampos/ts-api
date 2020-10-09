@@ -6,6 +6,8 @@ import { MultipleChoicesException } from './multipleChoices_exception';
 import { NotContenException } from './notContent_exception';
 import { NotFoundException } from './notFound_exception';
 import { InternalErrorException } from './internalError_exception';
+import { ConflitctException } from './conflict_exception';
+import { HttpStatusException } from './httpStatus_exception';
 
 export default {
     ForbiddenException,
@@ -15,5 +17,7 @@ export default {
     MultipleChoicesException,
     NotContenException,
     NotFoundException,
-    InternalErrorException
+    InternalErrorException,
+    ConflitctException,
+    HttpStatusException
 }

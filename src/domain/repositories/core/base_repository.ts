@@ -2,7 +2,6 @@ import { IRead } from "domain/repositories/interfaces/iread";
 import { IWrite } from "../interfaces/iwrite";
 import { Model, Document } from "mongoose";
 import { IPagination } from "interfaces/ipagination";
-import { response } from "express";
 
 export abstract class BaseRepository<T extends Document> implements IRead<T>, IWrite<T> {
 
@@ -19,8 +18,13 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
      */
     async findById(id: any): Promise<T | null> {
         try {
-            const result = await this.model.findById(id);
-            return result;
+            if (this.populateArray.length > 0) {
+                const result = await this.model.findById(id).populate(this.populateArray);
+                return result;
+            } else {
+                const result = await this.model.findById(id);
+                return result;
+            }
         } catch (error) {
             this._handleLog(error);
             return null;
@@ -60,8 +64,8 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
      * @param item T
      */
     async post(item: T): Promise<T> {
-        let newUser = new this.model(item);
-        const save = await newUser.save();
+        const o = new this.model(item);
+        const save = await o.save();
         return save;
     }
 
@@ -97,7 +101,7 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
     //print log
     private _handleLog(error: any) {
         if (this.showErrorLog) {
-            console.log(error) ;
+            console.log(error);
         }
     }
 }
