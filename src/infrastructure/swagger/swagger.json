@@ -45,7 +45,7 @@
             },
             "post": {
                 "tags": [
-                    "Userss"
+                    "Users"
                 ],
                 "summary": "Create a new user in system",
                 "requestBody": {

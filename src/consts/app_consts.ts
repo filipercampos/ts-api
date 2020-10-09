@@ -1,4 +1,4 @@
 export class AppConsts {
-    public static USERS_COLLECTION: string = 'users';
-    public static TASKS_COLLECTION: string = 'tasks';
+    public static USER_COLLECTION: string = 'users';
+    public static TASK_COLLECTION: string = 'tasks';
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import checkJwt from './check_jwt'; 
+import authJwt from './auth_jwt'; 
 
 export class Middleware {
 
@@ -14,7 +14,7 @@ export class Middleware {
 
         // a middleware function level app
         //This code is executed for every request to the router       
-        app.use(checkJwt);
+        app.use(authJwt);
 
         // support application/json type post data
         app.use(bodyParser.json());

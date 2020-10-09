@@ -1,13 +1,13 @@
 import { BadRequestException } from '@exceptions/badRequest_exception';
 import { IUser } from '@models/user_model';
 import { BaseController } from 'core/base_controller';
-import { UsuarioRepository } from 'domain/repositories/usuario_repository';
+import { UserRepository } from 'domain/repositories/user_repository';
 import { Request, Response } from 'express';
 
 export class UserController extends BaseController {
 
     constructor() {
-        super(new UsuarioRepository());
+        super(new UserRepository());
     }
 
     public async put(req: Request, res: Response) {
@@ -17,7 +17,7 @@ export class UserController extends BaseController {
                 name: req.body.name,
                 phone: req.body.phone
             } as IUser;
-
+            
             if (!this.reqHelper.isValid(user.name) || !this.reqHelper.isValid((user.phone))) {
                 super.sendError(res, new BadRequestException('Name or phone invalid'));
             }

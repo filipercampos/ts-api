@@ -16,18 +16,15 @@ export class Auth {
      * @param data json
      * @param expiration expiraçao do token (default 12h)
      */
-    public encodeJwt(data: any, expiration: string = '12h', domain: string = DOMAIN): string {
-
+    public generateJwt(data: any, expiration: string = '12h', domain: string = DOMAIN): string {
         const payload = {
             domain: domain,
             payload: data
         };
-
         const tokenConfig = ConfigUtil.getInstance().getTokenConfig();
         return jwt.sign(payload, this.secretOrPrivateKey, {
             expiresIn: expiration || tokenConfig.expires_in
         });
-
     }
 
     /**

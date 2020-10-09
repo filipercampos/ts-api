@@ -1,12 +1,14 @@
 import { BadRequestException } from '@exceptions/badRequest_exception';
-import { UnauthorizedException } from '@exceptions/unauthorized_exception';
-import { UsuarioRepository } from 'domain/repositories/usuario_repository';
+import { UserRepository } from 'domain/repositories/user_repository';
 import { Request, Response } from 'express';
+import { Auth } from 'infrastructure/security/auth';
 import { BaseController } from "../core/base_controller";
 export class AuthController extends BaseController {
 
+    private auth: Auth = new Auth();
+
     constructor() {
-        super(new UsuarioRepository());
+        super(new UserRepository());
     }
 
     public async post(req: Request, res: Response) {
@@ -18,9 +20,10 @@ export class AuthController extends BaseController {
             if (!email || !password) {
                 throw new BadRequestException('Email ou senha inválidos');
             }
-            let rep = this.baseRepository as UsuarioRepository;
+            let rep = this.baseRepository as UserRepository;
             let user = await rep.authenticate(req.body);
-            super.sendSuccess(res, user);
+            const token = new Auth().generateJwt({ id: user._id });
+            super.sendJson(res, 200, { token: token });
         } catch (error) {
             super.sendError(res, error);
         }

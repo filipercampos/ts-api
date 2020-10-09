@@ -29,6 +29,6 @@ export abstract class BaseException extends Exception {
         }
         super(errorMsg);
         this.status = code;
-        this.statusText = statusCode.toString();
+        this.statusText = HttpStatusCode[code];
     }
 }

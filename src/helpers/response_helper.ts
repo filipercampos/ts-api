@@ -51,7 +51,12 @@ export class ResponseHelper {
     * @param data any
     */
     public sendCreated(response: Response, data: any): void {
-        sender(response, HttpStatusCode.CREATED, data);
+
+        response.status(HttpStatusCode.CREATED).json({
+            code: HttpStatusCode.CREATED,
+            status: HttpStatusCode[HttpStatusCode.CREATED],
+            data: { id: data }
+        });
     }
 
     /**
@@ -224,7 +229,6 @@ function sender(response: Response, status: HttpStatusCode, data: any, paginatio
  * @param data dados a serem enviados em formato json
  */
 function getDefaultResponse(data: any, status: HttpStatusCode, pagination: IPagination | undefined = undefined): any {
-
     let res: any = {
         code: status,
         status: HttpStatusCode[status]
@@ -235,23 +239,26 @@ function getDefaultResponse(data: any, status: HttpStatusCode, pagination: IPagi
     else if (typeof data === 'string' || data instanceof String) {
         res.data = { message: data };
     }
-    else if (data.message) {
-        res.data = { message: data.message };
-    } else if (data instanceof BaseException) {
+    else if (data instanceof BaseException) {
         const ex = (data as BaseException);
-        res.data = {
+        res = {
             code: ex.status,
             status: ex.statusText,
-            message: ex.message
+            data: {
+                message: ex.message
+            }
         }
-
-    } else if (pagination) {
+    }
+    else if (data.message) {
+        res.data = { message: data.message };
+    }
+    else if (pagination) {
         res.data = {
             page: pagination.page,
             total: pagination.total,
             limit: pagination.limit,
             count: pagination.count,
-            results: data,
+            results: data
         }
     } else if (Array.isArray(data)) {
         res.data = { results: data };

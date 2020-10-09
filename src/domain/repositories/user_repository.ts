@@ -5,10 +5,11 @@ import UserModel, { IUser } from "@models/user_model";
 import { BaseRepository } from "domain/repositories/core/base_repository";
 import { BcryptUtil } from "utils/bcrypt_util";
 
-export class UsuarioRepository extends BaseRepository<IUser>{
+export class UserRepository extends BaseRepository<IUser>{
 
     constructor() {
         super(UserModel);
+        this.populateArray.push('tasks');
     }
 
     public async authenticate(item: IUser): Promise<IUser> {

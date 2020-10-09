@@ -33,30 +33,30 @@ paths:
       operationId: postAuth
       description: System authentication
       requestBody:
+        description: Data auth
         content:
           application/json:
             schema:
               $ref: '#/components/requestBodies/authRequest'
-
-        description: Usuario item to add
       responses:
         200:
           description: Authenticate ok
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/userResponse'
+                $ref: '#/components/schemas/userResponse'
         400:
           description:  BAD_REQUEST | Invalid input, object invalid
         401:
           description: UNAUTHORIZED | Password wrong
         404:
           description:  NOT_FOUND | Email not found
-        500:
-          description: INTERNAL_SERVER_ERROR | The server either does not recognize the request method
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'  
   
  # Users Routes #
   /users:
@@ -78,14 +78,8 @@ paths:
           description: user email 
           type: integer
           format: int32
-        - in: query
-          name: limit
-          schema:
-            $ref: '#/components/parameters/limitParam'
-        - in: query
-          name: page
-          schema:
-            $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limit'        
+        - $ref: '#/components/parameters/page'        
       responses:
         200:
           description: search users results matching criteria
@@ -98,33 +92,43 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/userResponse'
-        400:
-          description: BAD_REQUEST
+        default:
+          description: INTERNAL_SERVER_ERROR
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#/components/responses/400'
+                $ref: '#/components/responses/500'                
     post:
       tags:
         - Users
-      summary: Save a user
+      summary: Save an user
       operationId: postUser
       description: Add a user to the system
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/userRequest'
+              $ref: '#/components/requestBodies/userPostRequest'
         description: Usuario item to add
       responses:
         201:
-          description: item created
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/201'
         400:
           description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'
         409:
-          description: an existing item already exists
-  
+          description: An existing item already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/409'
   /users/{id}:
     get:
       tags:
@@ -144,28 +148,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/userResponse'
+                $ref: '#/components/schemas/userResponse'
         400:
           description: BAD_REQUEST
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/responses/400'
+                $ref: '#/components/responses/400'
         default:
           description: INTERNAL_SERVER_ERROR
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/responses/500'
+                $ref: '#/components/responses/500'
     put:
       tags:
         - Users
@@ -182,7 +177,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/userRequest'          
+              $ref: '#/components/requestBodies/userPutRequest'          
       responses:
         200:
           description: SUCCESS
@@ -232,12 +227,75 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/responses/500'          
+ 
+ # Tasks Routes #
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Get tasks
+      operationId: findTask
+      description: | 
+        All tasks available
+      parameters:
+        - in: query
+          name: name
+          description: user name
+          required: false
+          type: string
+        - $ref: '#/components/parameters/limit'        
+        - $ref: '#/components/parameters/page'     
+      responses:
+        200:
+          description: search users results matching criteria
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/responses/500'          
- 
-  # Tasks Routes #
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/userResponse'
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Tasks
+      summary: Save a task
+      operationId: postTask
+      description: Add a task to the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/taskRequest'
+        description: Task item to add
+        required: true
+      responses:
+        201:
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/201'
+        400:
+          description: 'invalid input, object invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'  
   /tasks/{id}:
     get:
       tags:
@@ -255,82 +313,104 @@ paths:
           name: limit
           description: maximum number of records to return
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            maximum: 20
+            ref: '#components/schemas/limit'
       responses:
         200:
-          description: search results matching criteria
+          description: SUCCESS
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/taskResponse'
+                $ref: '#/components/schemas/userResponse'
         400:
-          description: bad input parameter
-  
-  /tasks:
-    get:
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'
+    put:
       tags:
         - Tasks
-      summary: Get tasks
-      operationId: findTask
+      summary: Update task
+      operationId: putTask
       description: | 
-        All tasks available
+        Update data task
       parameters:
-        - in: query
-          name: name
-          description: user name
-          required: false
-          type: string
-        - in: query
-          name: limit
-          description: maximum number of records to return
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            maximum: 20
-      responses:
-        200:
-          description: search results matching criteria
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/taskResponse'
-        400:
-          description: bad input parameter
-    post:
-      tags:
-        - Tasks
-      summary: Save a task
-      operationId: postTask
-      description: Add a task to the system
+        - in: path
+          name: id
+          description: id
+          required: true
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/requestBodies/taskRequest'
-        description: Task item to add
-        required: true
+              $ref: '#/components/requestBodies/taskRequest'          
       responses:
-        201:
-          description: item created
+        200:
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
         400:
-          description: 'invalid input, object invalid'
-        500:
-          description: an unexpected condition was encountered
-
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Tasks
+      summary: Delete task
+      operationId: deleteTask
+      description: | 
+        User
+      parameters:
+        - in: path
+          name: id
+          description: id
+          required: true
+      responses:
+        200:
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/200'
+        400:
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'
+        default:
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/500'         
+ 
 # Components
 components:
+  # Middleware
   securitySchemes:
     JWT:
       type: apiKey
       in: header
       name: authorization
 
+  # Http Status responses #
   responses:
     200:
       description: SUCCESS
@@ -346,6 +426,22 @@ components:
               type: string
             data:
               type: boolean     
+    201:
+      description: CREATED
+      type: "object"
+      properties:
+        data:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: "int32"   
+            status:
+              type: string
+            id:
+              type: string
+              format: binary BSON
+              example: 5f80451c369fe256acdf0c0f
     400:
       description: BAD_REQUEST
       type: "object"
@@ -380,6 +476,23 @@ components:
             message:
               type: string
               example: Authentication is required and has failed 
+    409:
+      description: CONFLICT
+      type: "object"
+      properties:
+        data:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: "int32"   
+              example: 401
+            status:
+              type: string
+              example: CONFLICT
+            message:
+              type: string
+              example: Indicates that the resource requested is no longer available and will not be available again
     500:
       description: INTERNAL_SERVER_ERROR
       type: "object"
@@ -398,14 +511,15 @@ components:
               type: string
               example: The server either does not recognize the request method
 
+  # Model responses #              
   schemas:
     userResponse:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          format: binary BSON
+          example: 5f80451c369fe256acdf0c0f
         name:
           type: string
           example: user name
@@ -433,6 +547,7 @@ components:
           format: date-time
           example: '2020-10-06T09:12:33.001Z'               
   
+  # Request body #
   requestBodies:    
     authRequest:
       type: object
@@ -446,12 +561,13 @@ components:
         password:
           type: string
           example: asdf&*9@#
-    userRequest:
+    userPostRequest:
       type: object
       required:
         - name
-        - phone
         - email
+        - password
+        - phone
       properties:
         name:
           type: string
@@ -462,12 +578,30 @@ components:
         email:
           type: string
           example: user@gmail.com
+        password:
+          type: string
+          description: Use capital letters, number and special characters
+          example: A6@7#8j9k
+    userPutRequest:
+      type: object
+      required:
+        - name
+        - email
+        - phone
+      properties:
+        name:
+          type: string
+          example: Fulano
+        phone:
+          type: string
+          example: Silva
     taskRequest:
       type: object
       required:
         - name
         - description
         - start_date
+        - user
       properties:
         name:
           type: string
@@ -479,28 +613,33 @@ components:
           type: string
           format: date-time
           example: '2016-08-29T09:12:33.001Z'
-
+        user:
+          type: string
+          format: binary BSON
+          example: 5f80451c369fe256acdf0c0f
+ 
+  # Parameters #
   parameters:
-      limitParam:      # Can be referenced via '#/components/parameters/limitParam'
-        name: limit
-        in: query
-        description: Maximum number of items to return.
-        required: false
-        schema:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 100
-          default: 20    
-      pageParam:      # Can be referenced via '#/components/parameters/pageParam'
-        in: query          
-        name: page
-        in: query
-        description: Number of page for results.
-        required: false
-        schema:
-          type: integer
-          format: int32
-          minimum: 1
-          default: 1
-   
+    limit:      # Can be referenced via '#/components/parameters/limit'
+      name: limit
+      in: query
+      description: Maximum number of items to return
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20    
+    page:
+      name: page
+      in: query          
+      in: query
+      description: Number of page for results.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+  

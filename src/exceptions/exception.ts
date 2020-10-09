@@ -1,8 +1,3 @@
-export class Exception {
+export class Exception extends Error {
 
-    public readonly message: String;
-
-    constructor(message: String) {
-        this.message = message;
-    }
 }

@@ -2,11 +2,13 @@ import { IRead } from "domain/repositories/interfaces/iread";
 import { IWrite } from "../interfaces/iwrite";
 import { Model, Document } from "mongoose";
 import { IPagination } from "interfaces/ipagination";
+import { response } from "express";
 
 export abstract class BaseRepository<T extends Document> implements IRead<T>, IWrite<T> {
 
     public model: Model<T>;
-
+    public populateArray: String[] = [];
+    protected showErrorLog: boolean = false;
     constructor(model: Model<T>) {
         this.model = model;
     }
@@ -16,8 +18,13 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
      * @param id id
      */
     async findById(id: any): Promise<T | null> {
-        const result = await this.model.findById(id);
-        return result;
+        try {
+            const result = await this.model.findById(id);
+            return result;
+        } catch (error) {
+            this._handleLog(error);
+            return null;
+        }
     }
 
     /**
@@ -36,8 +43,14 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
                 .limit(pagination.limit);
             return result;
         } else {
-            let result = await this.model.find(query)
-            return result;
+            if (this.populateArray.length > 0) {
+                let result = await this.model.find(query)
+                    .populate(this.populateArray);
+                return result;
+            } else {
+                let result = await this.model.find(query);
+                return result;
+            }
         }
     }
 
@@ -81,4 +94,10 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
         return result != null;
     }
 
+    //print log
+    private _handleLog(error: any) {
+        if (this.showErrorLog) {
+            console.log(error) ;
+        }
+    }
 }

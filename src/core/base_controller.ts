@@ -35,17 +35,15 @@ export abstract class BaseController extends ResponseHelper implements IControll
     }
 
     public async post(req: Request, res: Response) {
-
         try {
             const save = await this.baseRepository.post(req.body);
-            super.sendCreated(res, save);
+            super.sendCreated(res, save._id);
         } catch (error) {
             super.sendError(res, error);
         }
     }
 
     public async put(req: Request, res: Response) {
-
         try {
             const result = await this.baseRepository.put(req.params.id, req.body);
             super.sendUpdated(res, result);
@@ -57,7 +55,7 @@ export abstract class BaseController extends ResponseHelper implements IControll
     public async patch(req: Request, res: Response) {
         try {
             const result = await this.baseRepository.patch(req.params.id, req.body);
-            super.sendSuccess(res, result);
+            super.sendUpdated(res, result);
         } catch (error) {
             super.sendError(res, error);
         }
@@ -67,7 +65,7 @@ export abstract class BaseController extends ResponseHelper implements IControll
 
         try {
             const users = await this.baseRepository.delete(req.params.id);
-            super.sendSuccess(res, users);
+            super.sendUpdated(res, users);
         } catch (error) {
             super.sendError(res, error);
         }

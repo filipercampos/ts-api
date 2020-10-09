@@ -5,5 +5,6 @@ export class TaskRepository extends BaseRepository<ITask>{
 
     constructor() {
         super(TaskModel);
+        this.populateArray.push('user');
     }
 }
