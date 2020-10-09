@@ -51,6 +51,10 @@ paths:
           description: UNAUTHORIZED | Password wrong
         404:
           description:  NOT_FOUND | Email not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/404'            
         default:
           description: INTERNAL_SERVER_ERROR
           content:
@@ -476,6 +480,23 @@ components:
             message:
               type: string
               example: Authentication is required and has failed 
+    404:
+      description: NOT_FOUND
+      type: "object"
+      properties:
+        data:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: "int32"   
+              example: 401
+            status:
+              type: string
+              example: UNAUTHORIZED
+            message:
+              type: string
+              example: The requested resource could not be found but may be available in the future.
     409:
       description: CONFLICT
       type: "object"

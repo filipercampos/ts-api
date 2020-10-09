@@ -1,3 +1,4 @@
+import { BaseException } from "@exceptions/base_exception";
 import { InternalErrorException } from "@exceptions/internalError_exception";
 import { NotFoundException } from "@exceptions/notFound_exception";
 import { UnauthorizedException } from "@exceptions/unauthorized_exception";
@@ -40,6 +41,9 @@ export class UserRepository extends BaseRepository<IUser>{
             }
 
         } catch (error) {
+            if(error instanceof BaseException){
+                throw error;
+            }
             throw new InternalErrorException(error);
         }
     }
