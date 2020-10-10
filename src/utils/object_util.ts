@@ -1,4 +1,9 @@
 export = {
+
+    /**
+     * @deprecated Use lodash
+     * @param obj 
+     */
     isEmpty(obj: any) {
         // null and undefined are "empty"
         if (obj == null) return true;

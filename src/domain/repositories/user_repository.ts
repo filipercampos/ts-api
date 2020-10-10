@@ -8,10 +8,12 @@ import { BcryptUtil } from "utils/bcrypt_util";
 
 export class UserRepository extends BaseRepository<IUser>{
 
-    constructor() {
-        super(UserModel);
+    constructor(eagerLoad: boolean = true) {
+        super(UserModel, eagerLoad);
         //enable eager load
-        this.populateArray.push('tasks');
+        this.populateById.push('tasks');
+        //sort asc
+        this.sorts = { name: 1 };
     }
 
     public async authenticate(item: IUser): Promise<IUser> {
@@ -21,7 +23,7 @@ export class UserRepository extends BaseRepository<IUser>{
 
         try {
             let user = await this.model.findOne({ email })
-                                       .select('+password');
+                .select('+password');
             if (user != null) {
                 if (user.password == password) {
                     //cancel password
@@ -41,7 +43,7 @@ export class UserRepository extends BaseRepository<IUser>{
             }
 
         } catch (error) {
-            if(error instanceof BaseException){
+            if (error instanceof BaseException) {
                 throw error;
             }
             throw new InternalErrorException(error);

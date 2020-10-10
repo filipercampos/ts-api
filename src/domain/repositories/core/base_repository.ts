@@ -2,14 +2,20 @@ import { IRead } from "domain/repositories/interfaces/iread";
 import { IWrite } from "../interfaces/iwrite";
 import { Model, Document } from "mongoose";
 import { IPagination } from "interfaces/ipagination";
+import _ from 'lodash';
 
 export abstract class BaseRepository<T extends Document> implements IRead<T>, IWrite<T> {
 
     public model: Model<T>;
-    public populateArray: String[] = [];
+    public populate: String[] = [];
+    public populateById: String[] = [];
     protected showErrorLog: boolean = false;
-    constructor(model: Model<T>) {
+    protected eagerLoad: boolean;
+    protected sorts: any = {};
+
+    constructor(model: Model<T>, eagerLoad: boolean = true) {
         this.model = model;
+        this.eagerLoad = eagerLoad;
     }
 
     /**
@@ -18,8 +24,8 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
      */
     async findById(id: any): Promise<T | null> {
         try {
-            if (this.populateArray.length > 0) {
-                const result = await this.model.findById(id).populate(this.populateArray);
+            if (this.eagerLoad && this.populateById.length > 0) {
+                const result = await this.model.findById(id).populate(this.populateById);
                 return result;
             } else {
                 const result = await this.model.findById(id);
@@ -33,26 +39,36 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
 
     /**
      * Get elements with filter
+     *     to like use 
+     *          { "name": { $regex: "m"} })
      * @param query filter
      * @param pagination optional
      */
     async find(query?: any, pagination?: IPagination): Promise<T[]> {
 
-        // to like use 
-        //      { "name": { $regex: "m"} })
+
         if (pagination) {
+
             let result = await this.model
                 .find(query)
                 .skip(pagination.offset)
-                .limit(pagination.limit);
+                .limit(pagination.limit)
+                .sort(this.sorts);
             return result;
         } else {
-            if (this.populateArray.length > 0) {
+            //eager load on
+            if (this.eagerLoad && this.populate.length > 0) {
+
+                //just eager load
                 let result = await this.model.find(query)
-                    .populate(this.populateArray);
+                    .populate(this.populate).sort(this.sorts);
                 return result;
+
             } else {
-                let result = await this.model.find(query);
+
+                //just find query
+                let result = await this.model.find(query)
+                    .sort(this.sorts);
                 return result;
             }
         }
@@ -98,7 +114,15 @@ export abstract class BaseRepository<T extends Document> implements IRead<T>, IW
         return result != null;
     }
 
-    //print log
+    /**
+     * Disable eager load
+     */
+    public resetEagerLoad() {
+        this.populate = [];
+        this.populateById = [];
+    }
+
+    //std log
     private _handleLog(error: any) {
         if (this.showErrorLog) {
             console.log(error);

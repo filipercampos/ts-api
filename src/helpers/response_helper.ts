@@ -178,7 +178,7 @@ export class ResponseHelper {
 
         const count = await model.collection.countDocuments();
         let page = parseInt(req.query.page + '') || 1;
-        let limit = parseInt(req.query.limit + '') || 0;
+        let limit = parseInt(req.query.limit + '') || 20;
         let offset = 0;
         let total = 0;
 

@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import util from '../utils/param_validator';
-import object_util from 'utils/object_util';
 
 export class RequestHelper {
 
@@ -136,7 +135,7 @@ export class RequestHelper {
      * @param value any
      */
     isValid(value: any): boolean {
-        if (object_util.isEmpty(value) || _.isNil(value)) {
+        if (_.isEmpty(value) || _.isNil(value)) {
             return false;
         }
         return true;

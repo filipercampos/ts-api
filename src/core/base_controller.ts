@@ -27,7 +27,7 @@ export abstract class BaseController extends ResponseHelper implements IControll
     public async find(req: Request, res: Response) {
         try {
             const pagination = await this.getPagination(req);
-            const result = await this.baseRepository.find(req.query);
+            const result = await this.baseRepository.find(req.query, pagination);
             super.sendSuccess(res, result, pagination);
         } catch (error) {
             super.sendError(res, error);

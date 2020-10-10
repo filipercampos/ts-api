@@ -40,15 +40,23 @@ paths:
               $ref: '#/components/requestBodies/authRequest'
       responses:
         200:
-          description: Authenticate ok
+          description: Authentication Successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/userResponse'
+                $ref: '#/components/schemas/tokenJwtResponse'
         400:
           description:  BAD_REQUEST | Invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/400'  
         401:
           description: UNAUTHORIZED | Password wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/401'  
         404:
           description:  NOT_FOUND | Email not found
           content:
@@ -534,6 +542,16 @@ components:
 
   # Model responses #              
   schemas:
+    tokenJwtResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            token:
+              type: apiKey
+              format: HS256
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb21haW4iOiJBUElfUkVTVCIsInBheWxvYWQiOnsiaWQiOiI1ZjgwOGY3NjFkNjg2ZDU2ZTQxZjU2MDgifSwiaWF0IjoxNjAyMzM0OTQ2LCJleHAiOjE2MDIzNzgxNDZ9.OLmbo-_fQ47yRceNv7u1qTW9VziGWiPPiLAuyRcS8rM
     userResponse:
       type: object
       properties:
@@ -567,6 +585,18 @@ components:
           type: string
           format: date-time
           example: '2020-10-06T09:12:33.001Z'               
+        end_date:
+          type: string
+          format: date-time
+          example: '2020-10-06T09:12:33.001Z'               
+        created_date:
+          type: string
+          format: date-time
+          example: '2020-10-06T09:12:33.001Z'      
+        user:
+          type: string
+          format: binary BSON
+          example: 5f80451c369fe256acdf0c0f                   
   
   # Request body #
   requestBodies:    
@@ -633,7 +663,11 @@ components:
         start_date:
           type: string
           format: date-time
-          example: '2016-08-29T09:12:33.001Z'
+          example: '2020-10-01T12:12:33.001Z'
+        end_date:
+          type: string
+          format: date-time
+          example: '2020-10-01T12:12:33.001Z'
         user:
           type: string
           format: binary BSON
