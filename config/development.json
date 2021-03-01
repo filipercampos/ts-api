@@ -12,9 +12,9 @@
         },
         "mssql": {
             "name": "SQL Server",
-            "host": "192.168.50.140",
-            "user": "loca",
-            "password": "loca321",
+            "host": "0.0.0.0",
+            "user": "test",
+            "password": "test",
             "database": "QAS",
             "port": 1433
         }
